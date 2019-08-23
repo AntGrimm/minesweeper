@@ -6,7 +6,8 @@ class GameBoard extends Component {
   state = {
     board: [],
     difficulty: 0,
-    id: 0
+    id: 0,
+    mines: 0
   }
 
   // Makes a new game on render and component did mount
@@ -14,7 +15,8 @@ class GameBoard extends Component {
     const resp = await axios.post(`http://minesweeper-api.herokuapp.com/games`)
     this.setState({
       board: resp.data.board,
-      id: resp.data.id
+      id: resp.data.id,
+      mines: resp.data.mines
     })
     console.log(resp)
   }
@@ -31,9 +33,13 @@ class GameBoard extends Component {
   }
 
   // Used for click event to check each box for a mine
-  makeApiCallCheckGame = async minesweeperData => {
+  makeApiCallCheckGame = async (x, y) => {
     const resp = await axios.post(
-      `http://minesweeper-api.herokuapp.com/games/${this.state.id}/check`
+      `http://minesweeper-api.herokuapp.com/games/${this.state.id}/check`,
+      {
+        row: x,
+        col: y
+      }
     )
     this.setState({
       board: resp.data.board
@@ -42,12 +48,17 @@ class GameBoard extends Component {
   }
 
   // Used for click even to flag each box
-  makeApiCallFlagGame = async minesweeperData => {
+  makeApiCallFlagGame = async (x, y) => {
     const resp = await axios.post(
-      `http://minesweeper-api.herokuapp.com/games/${this.state.id}/flag`
+      `http://minesweeper-api.herokuapp.com/games/${this.state.id}/flag`,
+      {
+        row: x,
+        col: y
+      }
     )
     this.setState({
-      board: resp.data.board
+      board: resp.data.board,
+      mines: resp.data.mines
     })
     console.log(resp)
   }
@@ -57,21 +68,12 @@ class GameBoard extends Component {
     this.makeApiCallNewGame()
   }
 
-  cellLeftClicked = (x, y) => {
-    console.log('clicked', x, y)
-    this.makeApiCallCheckGame()
-  }
-
-  cellRightClicked = (x, y) => {
-    console.log('right clicked', x, y)
-    this.makeApiCallFlagGame()
-  }
-
   render() {
     return (
       <>
         <main>
           <h1>Minesweeper!</h1>
+          <h2>Mines: {this.state.mines}</h2>
           <table>
             <tbody>
               {this.state.board.map((col, i) => {
@@ -82,8 +84,12 @@ class GameBoard extends Component {
                         <Cell
                           key={j}
                           display={this.state.board[i][j]}
-                          leftHandleClick={() => this.cellLeftClicked(i, j)}
-                          rightHandleClick={() => this.cellRightClicked(i, j)}
+                          leftHandleClick={() =>
+                            this.makeApiCallCheckGame(i, j)
+                          }
+                          rightHandleClick={() =>
+                            this.makeApiCallFlagGame(i, j)
+                          }
                         />
                       )
                     })}

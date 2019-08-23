@@ -5,7 +5,10 @@ class Cell extends Component {
     return (
       <td
         onClick={this.props.leftHandleClick}
-        onContextMenu={this.props.rightHandleClick}
+        onContextMenu={e => {
+          this.props.rightHandleClick()
+          e.preventDefault()
+        }}
       >
         {this.props.display}
       </td>
