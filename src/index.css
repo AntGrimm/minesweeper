@@ -24,9 +24,13 @@ td {
   text-align: center;
   height: 2rem;
   width: 3rem;
-  background-color: rgb(177, 174, 174);
+  background-color: rgb(221, 215, 215);
   box-shadow: 0 0 5px rgb(109, 108, 108);
 }
+
+/* td[data-status=' '] {
+  background-color: rgb(177, 174, 174);
+} */
 
 td:active {
   background-color: rgb(75, 75, 75);
