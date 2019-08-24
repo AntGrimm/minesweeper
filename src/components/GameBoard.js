@@ -7,7 +7,8 @@ class GameBoard extends Component {
     board: [],
     difficulty: 0,
     id: 0,
-    mines: 0
+    mines: 0,
+    state: ''
   }
 
   // Makes a new game on render and component did mount
@@ -16,7 +17,8 @@ class GameBoard extends Component {
     this.setState({
       board: resp.data.board,
       id: resp.data.id,
-      mines: resp.data.mines
+      mines: resp.data.mines,
+      state: resp.data.state
     })
     console.log(resp)
   }
@@ -33,7 +35,7 @@ class GameBoard extends Component {
   }
 
   // Used for click event to check each box for a mine
-  makeApiCallCheckGame = async (x, y) => {
+  leftClickCell = async (x, y) => {
     const resp = await axios.post(
       `http://minesweeper-api.herokuapp.com/games/${this.state.id}/check`,
       {
@@ -42,13 +44,14 @@ class GameBoard extends Component {
       }
     )
     this.setState({
-      board: resp.data.board
+      board: resp.data.board,
+      state: resp.data.state
     })
     console.log(resp)
   }
 
   // Used for click even to flag each box
-  makeApiCallFlagGame = async (x, y) => {
+  rightClickCell = async (x, y) => {
     const resp = await axios.post(
       `http://minesweeper-api.herokuapp.com/games/${this.state.id}/flag`,
       {
@@ -58,7 +61,8 @@ class GameBoard extends Component {
     )
     this.setState({
       board: resp.data.board,
-      mines: resp.data.mines
+      mines: resp.data.mines,
+      state: resp.data.state
     })
     console.log(resp)
   }
@@ -68,12 +72,27 @@ class GameBoard extends Component {
     this.makeApiCallNewGame()
   }
 
+  reset = () => {
+    console.log('mounting')
+    this.makeApiCallNewGame()
+  }
+
+  // winOrLose = () => {
+  //   if ({this.data.state})
+  // }
+
   render() {
     return (
       <>
         <main>
           <h1>Minesweeper!</h1>
-          <h2>Mines: {this.state.mines}</h2>
+          <section className="play-area">
+            <h2>Mines: {this.state.mines}</h2>
+            <h2>Status: {this.state.state}</h2>
+            <button className="reset-button" onClick={this.reset}>
+              Reset
+            </button>
+          </section>
           <table>
             <tbody>
               {this.state.board.map((col, i) => {
@@ -84,12 +103,8 @@ class GameBoard extends Component {
                         <Cell
                           key={j}
                           display={this.state.board[i][j]}
-                          leftHandleClick={() =>
-                            this.makeApiCallCheckGame(i, j)
-                          }
-                          rightHandleClick={() =>
-                            this.makeApiCallFlagGame(i, j)
-                          }
+                          leftHandleClick={() => this.leftClickCell(i, j)}
+                          rightHandleClick={() => this.rightClickCell(i, j)}
                         />
                       )
                     })}

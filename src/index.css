@@ -36,3 +36,8 @@ h1 {
   display: flex;
   justify-content: center;
 }
+
+.reset-button {
+  margin: 1rem;
+  max-width: 3rem;
+}
