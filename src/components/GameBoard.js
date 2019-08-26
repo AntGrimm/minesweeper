@@ -77,10 +77,6 @@ class GameBoard extends Component {
     this.makeApiCallNewGame()
   }
 
-  // winOrLose = () => {
-  //   if ({this.data.state})
-  // }
-
   render() {
     return (
       <>
