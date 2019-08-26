@@ -77,6 +77,15 @@ class GameBoard extends Component {
     this.makeApiCallNewGame()
   }
 
+  // mediumDifficulty = async () => {
+  //   const resp = await axios.post(
+  //   )
+  //     this.setState({
+  //       difficulty: 1,
+  //       difficulty: resp.data.difficulty
+  // }
+  //   )
+
   render() {
     return (
       <>
@@ -87,6 +96,12 @@ class GameBoard extends Component {
             <h2>Status: {this.state.state}</h2>
             <button className="reset-button" onClick={this.reset}>
               Reset
+            </button>
+            <button
+              className="difficulty-medium"
+              onClick={this.mediumDifficulty}
+            >
+              Medium
             </button>
           </section>
           <table>
